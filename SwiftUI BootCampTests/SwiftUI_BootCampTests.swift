@@ -1,0 +1,19 @@
+//
+//  SwiftUI_BootCampTests.swift
+//  SwiftUI BootCampTests
+//
+//  Created by Prem Kumar Gundu on 6/15/26.
+//
+
+import Testing
+@testable import SwiftUI_BootCamp
+
+struct SwiftUI_BootCampTests {
+
+    @Test func example() async throws {
+        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+        // Swift Testing Documentation
+        // https://developer.apple.com/documentation/testing
+    }
+
+}
