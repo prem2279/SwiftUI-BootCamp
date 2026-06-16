@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ColorsBootCamp: View {
+struct Matrix3X3: View {
     var body: some View {
         VStack{
             HStack{Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
