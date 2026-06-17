@@ -35,5 +35,5 @@ struct Matrix3X3: View {
 }
 
 #Preview {
-    ColorsBootCamp()
+    Matrix3X3()
 }
