@@ -12,6 +12,7 @@ struct LoginPage: View{
     let subTitle: String = "Enter Credentionals to Login"
     @State var name: String = ""
     @State var password: String = ""
+    @State private var showPassword: Bool = false
     
     var body: some View{
         
@@ -39,11 +40,12 @@ struct LoginPage: View{
                 Image(systemName: "envelope")
                     .frame(width: 25, height: 25)
                 TextField("Enter your name", text: $name)
-                    .frame(width: 245)
+                    .frame(maxWidth: .infinity)
+                    .fontWeight(.semibold)
             }
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 15)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
                     .stroke(.black)
             )
             
@@ -52,15 +54,27 @@ struct LoginPage: View{
                 
                 Image(systemName: "lock.shield.fill")
                     .frame(width: 25, height: 25)
-                TextField("Enter your password", text: $password)
-                    .frame(width: 200)
-                Image(systemName: "eye.fill")
+                if showPassword {
+                        TextField("Enter your password", text: $password)
+                            .fontWeight(.semibold)
+                    } else {
+                        SecureField("Enter your password", text: $password)
+                            .fontWeight(.semibold)
+                    }
+                
+                Button(action: {
+                    self.showPassword.toggle()
+                }, label: {
+                    Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
+                                .foregroundColor(.black)
+                    
+                })
                 
             }
             .padding()
             
             .overlay(
-                RoundedRectangle(cornerRadius: 15)
+                RoundedRectangle(cornerRadius: 10)
                     .stroke(.black)
             )
             
@@ -70,6 +84,7 @@ struct LoginPage: View{
                 
             }, label: {
                 Text("Submit")
+                    .frame(maxWidth: .infinity)
                     .padding()
                     .foregroundStyle(.white)
                     .background(.tint)
@@ -77,11 +92,19 @@ struct LoginPage: View{
 
             })
             
+            HStack(spacing: 0){
+                Text("Don't Have an Account?  ")
+                Button("SingUp"){
+                    
+                }
+                .foregroundStyle(.custom)
+            }
+            
             Spacer(minLength: 20)
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
+        .padding(.horizontal, 50)
         .background(Color(.systemGray6))
         
     }
