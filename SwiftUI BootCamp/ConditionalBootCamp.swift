@@ -14,11 +14,11 @@ struct ConditionalBootCamp: View {
             changeimage.toggle()
         }
         
-        if changeimage{
+        if changeimage {
             Image("1")
                 .resizable()
                 .frame(width: 200, height: 200)
-        }else{
+        } else {
             Image("spotify")
                 .resizable()
                 .frame(width: 200, height: 200)

@@ -9,13 +9,6 @@ import SwiftUI
 
 struct CreateAccountPage: View {
     
-    @State var fullName: String = ""
-    @State var email: String = ""
-    @State var password: String = ""
-    @State var cPassword: String = ""
-    @State var showPassword: Bool = false
-    @State var showCPassword: Bool = false
-    
     var body: some View{
         ZStack {
             //Background
@@ -23,40 +16,53 @@ struct CreateAccountPage: View {
                 .ignoresSafeArea()
             
             //Content
-            VStack(spacing: 20){
-                
-                pageLogoView()
-                
-                pageTitleView()
-                
-                textFieldView(enteredText: $fullName, placeHolderText: "Enter Your Full Name", systemIcon: "person", title: "Full Name")
-                textFieldView(enteredText: $email, placeHolderText: "Enter Your Email", systemIcon : "envelope", title: "Email")
-                
-                passwordView(showPassword: $showPassword, password: $password, placeHolderText: "Enter Your Password", title: "Password" )
-                passwordView(showPassword: $showCPassword, password: $cPassword, placeHolderText: "Confirm Your Password", title: "Confirm Password")
-                
-                buttonView(buttonTitle: "Create Account", logoName: "apple.logo", showLogo: false)
-                
-                seperatorView()
-                
-                alternateSignUpView()
-                
-                loginNavigateView()
-                
-                
-            }
-            .padding()
-            .padding(.horizontal)
+            AccountElementView()
         }
-        
-        
-        
     }
-    
-    
 }
 
-struct loginNavigateView: View {
+// MARK: - Account Element View
+
+struct AccountElementView: View {
+    
+    @State var fullName: String = ""
+    @State var email: String = ""
+    @State var password: String = ""
+    @State var cPassword: String = ""
+    @State var showPassword: Bool = false
+    @State var showCPassword: Bool = false
+    
+    var body: some View {
+        VStack(spacing: 20){
+            
+            PageLogoView()
+            
+            PageTitleView()
+            
+            TextFieldView(enteredText: $fullName, placeHolderText: "Enter Your Full Name", systemIcon: "person", title: "Full Name")
+            TextFieldView(enteredText: $email, placeHolderText: "Enter Your Email", systemIcon : "envelope", title: "Email")
+            
+            PasswordView(showPassword: $showPassword, password: $password, placeHolderText: "Enter Your Password", title: "Password" )
+            PasswordView(showPassword: $showCPassword, password: $cPassword, placeHolderText: "Confirm Your Password", title: "Confirm Password")
+            
+            CommonButtonView(buttonTitle: "Create Account", logoName: "apple.logo", showLogo: false){
+                
+            }
+            
+            SeperatorView()
+            
+            AlternateSignUpView()
+            
+            LoginNavigateView()
+        }
+        .padding()
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Login Navigation View
+
+struct LoginNavigateView: View {
     var body: some View {
         HStack(spacing: 0){
             Text("Already Have an Account?  ")
@@ -68,16 +74,24 @@ struct loginNavigateView: View {
     }
 }
 
-struct alternateSignUpView: View {
+// MARK: - Alternate SignUp View
+
+struct AlternateSignUpView: View {
     var body: some View {
         HStack{
-            buttonView(buttonTitle: "Google", logoName: "apple.logo")
-            buttonView(buttonTitle: "Apple", logoName: "apple.logo")
+            CommonButtonView(buttonTitle: "Google", logoName: "apple.logo"){
+                
+            }
+            CommonButtonView(buttonTitle: "Apple", logoName: "apple.logo"){
+                
+            }
         }
     }
 }
 
-struct seperatorView: View {
+// MARK: - Seperator View
+
+struct SeperatorView: View {
     var body: some View {
         HStack(spacing: 10, content: {
             Spacer()
@@ -92,7 +106,9 @@ struct seperatorView: View {
     }
 }
 
-struct pageLogoView: View {
+// MARK: - Page Logo View
+
+struct PageLogoView: View {
     var body: some View{
         Circle()
             .fill(.purple.opacity(0.3))
@@ -106,7 +122,9 @@ struct pageLogoView: View {
     }
 }
 
-struct pageTitleView: View {
+// MARK: - Page Title View
+
+struct PageTitleView: View {
     var body: some View{
         
         VStack(spacing: 0){
@@ -119,15 +137,16 @@ struct pageTitleView: View {
     }
 }
 
-struct buttonView: View {
-    @State var buttonTitle: String
-    @State var logoName: String
-    @State var showLogo: Bool = true
+// MARK: - Button View
+
+struct CommonButtonView: View {
+     let buttonTitle: String
+     let logoName: String
+     var showLogo: Bool = true
+    let action: () -> Void
     
     var body: some View {
-        Button(action: {
-            
-        }, label: {
+        Button(action: action, label: {
             HStack(spacing: 10){
                 if(showLogo){
                     Image(systemName: logoName)
@@ -151,11 +170,15 @@ struct buttonView: View {
     }
 }
 
-struct textFieldView: View {
+// MARK: - Text Field View
+
+struct TextFieldView: View {
+    
     @Binding var enteredText : String
-    @State var placeHolderText: String
-    @State var systemIcon: String
-    @State var title: String
+    let placeHolderText: String
+    let systemIcon: String
+    let title: String
+    
     var body: some View {
         VStack (spacing: 0) {
             Text(title)
@@ -178,7 +201,9 @@ struct textFieldView: View {
     }
 }
 
-struct passwordView: View {
+// MARK: - Password View
+
+struct PasswordView: View {
     @Binding var showPassword: Bool
     @Binding var password: String
     @State var placeHolderText: String
