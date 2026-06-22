@@ -15,7 +15,7 @@ struct GridBootCamp: View{
 //        GridItem(.fixed(110)),
 //        GridItem(.fixed(50)),
 //        GridItem(.fixed(20)),
-        GridItem(.flexible(), spacing: 10),
+        GridItem(.flexible(), spacing: 25),
         GridItem(.flexible(), spacing: 10),
         GridItem(.flexible(), spacing: 10),
 //        GridItem(.flexible()),

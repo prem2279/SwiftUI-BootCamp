@@ -35,28 +35,102 @@ struct AccountElementView: View {
     var body: some View {
         VStack(spacing: 20){
             
-            PageLogoView()
+            logoView
             
-            PageTitleView()
+            titleView
             
-            TextFieldView(enteredText: $fullName, placeHolderText: "Enter Your Full Name", systemIcon: "person", title: "Full Name")
-            TextFieldView(enteredText: $email, placeHolderText: "Enter Your Email", systemIcon : "envelope", title: "Email")
+            inputForm
             
-            PasswordView(showPassword: $showPassword, password: $password, placeHolderText: "Enter Your Password", title: "Password" )
-            PasswordView(showPassword: $showCPassword, password: $cPassword, placeHolderText: "Confirm Your Password", title: "Confirm Password")
+            actionView
             
-            CommonButtonView(buttonTitle: "Create Account", logoName: "apple.logo", showLogo: false){
-                
-            }
-            
-            SeperatorView()
-            
-            AlternateSignUpView()
-            
-            LoginNavigateView()
+            footerView
         }
         .padding()
         .padding(.horizontal)
+    }
+}
+
+//MARK: - Extension for Account Element View Input Form
+
+extension AccountElementView{
+    
+    @ViewBuilder
+    var inputForm: some View {
+        
+        TextFieldView(
+            enteredText: $fullName,
+            placeHolderText: "Enter Your Full Name",
+            systemIcon: "person",
+            title: "Full Name")
+        TextFieldView(enteredText: $email,
+                      placeHolderText: "Enter Your Email",
+                      systemIcon : "envelope",
+                      title: "Email")
+        
+        PasswordView(showPassword: $showPassword,
+                     password: $password,
+                     placeHolderText: "Enter Your Password",
+                     title: "Password" )
+        
+        PasswordView(showPassword: $showCPassword,
+                     password: $cPassword,
+                     placeHolderText: "Confirm Your Password",
+                     title: "Confirm Password")
+    }
+    
+}
+
+//MARK: - Extension for Account Element View Header & Footer
+
+extension AccountElementView {
+    var logoView: some View {
+        Circle()
+            .fill(.purple.opacity(0.3))
+            .frame(width: 75, height: 75)
+            .overlay(
+                Image(systemName: "square")
+                    .resizable()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(.purple)
+            )
+    }
+    
+    @ViewBuilder
+    var titleView: some View{
+        
+        VStack(spacing: 0){
+            Text("Create Account")
+                .font(.title)
+                .fontWeight(.bold)
+            Text("Sign up to get started")
+                .fontWeight(.medium)
+        }
+    }
+    
+    var footerView: some View {
+        LoginNavigateView()
+    }
+}
+
+//MARK: - Extension for Action View
+
+extension AccountElementView {
+    @ViewBuilder
+    var actionView: some View {
+        CommonButtonView(buttonTitle: "Create Account", logoName: "apple.logo", showLogo: false){
+            handleCreateAccount()
+        }
+        
+        SeperatorView()
+        
+        AlternateSignUpView()
+    }
+}
+
+//MARK: -Functions for Action Buttons
+extension AccountElementView {
+    func handleCreateAccount() {
+        print("Create account tapped")
     }
 }
 
@@ -106,37 +180,6 @@ struct SeperatorView: View {
     }
 }
 
-// MARK: - Page Logo View
-
-struct PageLogoView: View {
-    var body: some View{
-        Circle()
-            .fill(.purple.opacity(0.3))
-            .frame(width: 75, height: 75)
-            .overlay(
-                Image(systemName: "square")
-                    .resizable()
-                    .frame(width: 25, height: 25)
-                    .foregroundStyle(.purple)
-            )
-    }
-}
-
-// MARK: - Page Title View
-
-struct PageTitleView: View {
-    var body: some View{
-        
-        VStack(spacing: 0){
-            Text("Create Account")
-                .font(.title)
-                .fontWeight(.bold)
-            Text("Sign up to get started")
-                .fontWeight(.medium)
-        }
-    }
-}
-
 // MARK: - Button View
 
 struct CommonButtonView: View {
@@ -170,6 +213,38 @@ struct CommonButtonView: View {
     }
 }
 
+//MARK: Custom View Builder for Input Field Template
+
+struct InputFieldTemplate<Content: View> : View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: ()-> Content){
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack (spacing: 0) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack(spacing: 20){
+                
+                content
+                
+            }
+            .padding()
+            
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.black)
+            )
+        }
+    }
+}
+
 // MARK: - Text Field View
 
 struct TextFieldView: View {
@@ -180,24 +255,14 @@ struct TextFieldView: View {
     let title: String
     
     var body: some View {
-        VStack (spacing: 0) {
-            Text(title)
-                .font(.caption)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            HStack(spacing: 20){
-                Image(systemName: systemIcon)
-                TextField(placeHolderText, text: $enteredText)
-                    .frame(maxWidth: .infinity)
-                    .fontWeight(.semibold)
-            }
-            .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.black)
-            )
+        
+        InputFieldTemplate(title: title){
+            Image(systemName: systemIcon)
+            TextField(placeHolderText, text: $enteredText)
+                .frame(maxWidth: .infinity)
+                .fontWeight(.semibold)
         }
+       
     }
 }
 
@@ -206,44 +271,48 @@ struct TextFieldView: View {
 struct PasswordView: View {
     @Binding var showPassword: Bool
     @Binding var password: String
-    @State var placeHolderText: String
-    @State var title: String
+    let placeHolderText: String
+    let title: String
     
     var body: some View {
-        VStack (spacing: 0) {
-            Text(title)
-                .font(.caption)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            HStack(spacing: 20){
-                
-                Image(systemName: "lock.shield.fill")
-                    .frame(width: 25, height: 25)
-                if showPassword {
-                    TextField(placeHolderText, text: $password)
-                        .fontWeight(.semibold)
-                } else {
-                    SecureField(placeHolderText, text: $password)
-                        .fontWeight(.semibold)
-                }
-                
-                Button(action: {
-                    self.showPassword.toggle()
-                }, label: {
-                    Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
-                        .foregroundColor(.black)
-                    
-                })
-                
-            }
-            .padding()
+        InputFieldTemplate(title: title){
+            Image(systemName: "lock.shield.fill")
+                .frame(width: 25, height: 25)
             
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.black)
-            )
+            passwordField
+            
+            Button(action: {
+                self.showPassword.toggle()
+            }, label: {
+                Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
+                    .foregroundColor(.black)
+                
+            })
         }
     }
+    
+    @ViewBuilder
+    var passwordField: some View {
+        if showPassword {
+            TextField(placeHolderText, text: $password)
+                .fontWeight(.semibold)
+        } else {
+            SecureField(placeHolderText, text: $password)
+                .fontWeight(.semibold)
+        }
+    }
+    
+//    @ViewBuilder
+//    func passwordField() -> some View {
+//            if showPassword {
+//                TextField(placeHolderText, text: $password)
+//                    .fontWeight(.semibold)
+//            } else {
+//                SecureField(placeHolderText, text: $password)
+//                    .fontWeight(.semibold)
+//            }
+//    }
+    
 }
 
 #Preview {
